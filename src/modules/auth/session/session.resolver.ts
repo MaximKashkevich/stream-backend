@@ -2,7 +2,7 @@ import { Authorization } from '@/src/shared/decorators/auth.decorator';
 import { UserAgent } from '@/src/shared/decorators/user-agent.decorator';
 import type { GqlContext } from '@/src/shared/types/gql-context.types';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UserModel } from '../account/modules/user.module';
+import { UserModel } from '../account/modules/user.model';
 import { LoginInput } from './inputs/login.input';
 import { SessionModel } from './models/session.model';
 import { SessionService } from './session.service';

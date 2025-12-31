@@ -3,7 +3,7 @@ import { Authorized } from '@/src/shared/decorators/authhorized.decorator';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AccountService } from './account.service';
 import { CreateUserInput } from './inputs/create-user.input';
-import { UserModel } from './modules/user.module';
+import { UserModel } from './modules/user.model';
 
 @Resolver('Account')
 export class AccountResolver {
