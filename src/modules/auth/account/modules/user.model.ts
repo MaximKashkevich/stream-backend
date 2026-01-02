@@ -1,7 +1,8 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { User } from '@prisma/client';
 
 @ObjectType()
-export class UserModel {
+export class UserModel implements User {
   @Field(() => ID)
   public id: string;
 
@@ -23,6 +24,9 @@ export class UserModel {
   @Field(() => String, { nullable: true })
   public bio: string;
 
+  @Field(() => String, { nullable: true })
+  public telegramId: string;
+
   @Field(() => Boolean)
   public isVerified: boolean;
 
@@ -34,6 +38,36 @@ export class UserModel {
 
   @Field(() => String, { nullable: true })
   public totpSecret: string;
+
+  @Field(() => Boolean)
+  public isDeactivated: boolean;
+
+  @Field(() => Date, { nullable: true })
+  public deactivatedAt: Date;
+
+  // @Field(() => [SocialLinkModel])
+  // public socialLinks: SocialLinkModel[]
+
+  // @Field(() => StreamModel)
+  // public stream: StreamModel
+
+  // @Field(() => [NotificationModel])
+  // public notifications: NotificationModel[]
+
+  // @Field(() => NotificationSettingsModel)
+  // public notificationSettings: NotificationSettingsModel
+
+  // @Field(() => [FollowModel])
+  // public followers: FollowModel[]
+
+  // @Field(() => [FollowModel])
+  // public followings: FollowModel[]
+
+  // @Field(() => [PlanModel])
+  // public sponsorshipPlans: PlanModel[]
+
+  // @Field(() => [SubscriptionModel])
+  // public sponsorshipSubscriptions: SubscriptionModel[]
 
   @Field(() => Date)
   public createdAt: Date;

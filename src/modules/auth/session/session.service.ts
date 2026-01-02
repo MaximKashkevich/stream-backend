@@ -87,8 +87,22 @@ export class SessionService {
       },
     });
 
-    if (!user) {
-      throw new NotFoundException('Пользователь не найден');
+    // if (!user || user.isDeactivated) {
+    // 	throw new NotFoundException('Пользователь не найден')
+    // }
+
+    const isValidPassword = await verify(user.password, password);
+
+    if (!isValidPassword) {
+      throw new UnauthorizedException('Неверный пароль');
+    }
+
+    if (!user.isEmailVerified) {
+      await this.verificationService.sendVerificationToken(user);
+
+      throw new BadRequestException(
+        'Аккаунт не верифицирован. Пожалуйста, проверьте свою почту для подтверждения',
+      );
     }
 
     if (user.isTotpEnabled) {
@@ -106,32 +120,21 @@ export class SessionService {
         secret: user.totpSecret,
       });
 
-      const delta = totp.validate({ token: pin });
+      // ✅ Добавьте window: 2 здесь!
+      const delta = totp.validate({
+        token: pin,
+        window: 2, // ← Вот это самое важное!
+        timestamp: Date.now(),
+      });
 
       if (delta === null) {
         throw new BadRequestException('Неверный код');
       }
     }
 
-    const isValidPassword = await verify(user.password, password);
-
     const metadata = getSessionMetadata(req, userAgent);
 
-    if (!isValidPassword) {
-      throw new UnauthorizedException('Неверный пароль');
-    }
-
-    if (!user.isEmailVerified) {
-      await this.verificationService.sendVerificationToken(user);
-
-      throw new BadRequestException(
-        'Аккаунт не верифицирован. Пожалуйста, проверьте свою почту для подтверждения',
-      );
-    }
-
-    await saveSession(req, user, metadata);
-
-    return user;
+    return saveSession(req, user, metadata);
   }
 
   public async logout(req: Request) {

@@ -25,6 +25,8 @@ model User{
   isTotpEnabled Boolean @default(false) @map("is_totp_enabled")
   totpSecret String? @map("totp_secret")
 
+  isDeactivated Boolean @default(false) @map("is_deactivated")
+
   tokens Token[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
